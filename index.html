@@ -10,6 +10,7 @@
             text-align: center;
             background-color: #222;
             color: white;
+            margin-top: 100px;
         }
         .container {
             max-width: 400px;
@@ -42,6 +43,7 @@
             <option value="100">Anciana (+100 XP)</option>
             <option value="200">Extranjera (+200 XP)</option>
             <option value="500">Gorda y fea (+500 XP)</option>
+            <option value="win2">Hombre</option>
             <option value="win">Discapacitada</option>
         </select>
         <br>
@@ -75,7 +77,11 @@
             let xpGanado;
             
             if (categoriaValor === "win") {
-                document.getElementById("xpTotal").innerText = "¡Ganaste el juego!";
+                document.getElementById("xpTotal").innerText = "¡Te pasaste la vida!";
+                return;
+            }
+            if (categoriaValor === "win2") {
+                document.getElementById("xpTotal").innerText = "¡Okey, eres super gay!";
                 return;
             }
             if (penalizacion === "ban") {
