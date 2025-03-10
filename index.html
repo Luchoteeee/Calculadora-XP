@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Farmeo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: white;
+            margin-top: 100px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #333;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        select, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .boton{
+            background-color: rgba(255, 30, 0, 0.678);
+            color: white;
+            font-weight: bold;
+        }
+
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calculadora de Farmeo de XP</h2>
+        <label>Selecciona una categoría:</label>
+        <select id="categoria">
+            <option value="20">Fea (+20 XP)</option>
+            <option value="40">Gorda (+40 XP)</option>
+            <option value="100">Anciana (+100 XP)</option>
+            <option value="200">Extranjera (+200 XP)</option>
+            <option value="500">Gorda y fea (+500 XP)</option>
+            <option value="win">Discapacitada</option>
+        </select>
+        <br>
+        <label>Selecciona una penalización:</label>
+        <select id="penalizacion">
+            <option value="0">Ninguna</option>
+            <option value="-400">Prima (-400 XP)</option>
+            <option value="-600">Familiar cernano (-600 XP)</option>
+            <option value="ban">Mujer sin cedula (Baneado del server)</option>
+        </select>
+        <br>
+        <button onclick="calcularXP()" class="boton">Calcular XP</button>
+        <h3>XP Total: <span id="xpTotal">0</span></h3>
+        <h3>Historial:</h3>
+        <ul id="historial"></ul>
+        <h3>Contador de categorías:</h3>
+        <ul id="contadorCategorias"></ul>
+        <h3>Promedio de XP: <span id="xpPromedio">0</span></h3>
+    </div>
+
+    <script>
+        let xpAcumulado = 0;
+        let historialXP = [];
+        let contadorCategorias = {};
+        
+        function calcularXP() {
+            let categoria = document.getElementById("categoria");
+            let categoriaValor = categoria.value;
+            let categoriaTexto = categoria.options[categoria.selectedIndex].text;
+            let penalizacion = document.getElementById("penalizacion").value;
+            let xpGanado;
+            
+            if (categoriaValor === "win") {
+                document.getElementById("xpTotal").innerText = "¡Ganaste el juego!";
+                return;
+            }
+            if (penalizacion === "ban") {
+                document.getElementById("xpTotal").innerText = "Baneado del server";
+                return;
+            }
+            
+            xpGanado = parseInt(categoriaValor) + parseInt(penalizacion);
+            xpAcumulado += xpGanado;
+            historialXP.push(xpGanado);
+            
+            // Contador de categorías
+            if (categoriaTexto in contadorCategorias) {
+                contadorCategorias[categoriaTexto]++;
+            } else {
+                contadorCategorias[categoriaTexto] = 1;
+            }
+            
+            document.getElementById("xpTotal").innerText = xpAcumulado;
+            actualizarHistorial();
+            actualizarContadorCategorias();
+        }
+        
+        function actualizarHistorial() {
+            let historialElemento = document.getElementById("historial");
+            historialElemento.innerHTML = "";
+            historialXP.forEach(xp => {
+                let li = document.createElement("li");
+                li.innerText = `XP ganado: ${xp}`;
+                historialElemento.appendChild(li);
+            });
+            
+            let promedioXP = historialXP.length > 0 ? (xpAcumulado / historialXP.length).toFixed(2) : 0;
+            document.getElementById("xpPromedio").innerText = promedioXP;
+        }
+        
+        function actualizarContadorCategorias() {
+            let contadorElemento = document.getElementById("contadorCategorias");
+            contadorElemento.innerHTML = "";
+            
+            for (let categoria in contadorCategorias) {
+                let li = document.createElement("li");
+                li.innerText = `${categoria}: ${contadorCategorias[categoria]} veces`;
+                contadorElemento.appendChild(li);
+            }
+        }
+    </script>
+</body>
+</html>
